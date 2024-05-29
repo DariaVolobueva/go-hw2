@@ -29,16 +29,23 @@ func (z *Zookeeper) Catch(animal *Animal) {
 
 func (z *Zookeeper) ReturnToCages(cages []*Cage) {
     for _, animal := range z.Caught {
-        for _, cage := range cages {
-            if cage.Animal == nil {
-                cage.Animal = animal
-                fmt.Printf("%s повернув %s до клітки %d\n", z.Name, animal.Name, cage.Number)
-                break
-            }
+        emptyCage := getEmptyCage(cages)
+        if emptyCage != nil {
+            emptyCage.Animal = animal
+            fmt.Printf("%s повернув %s до клітки %d\n", z.Name, animal.Name, emptyCage.Number)
         }
     }
     
     z.Caught = []*Animal{}
+}
+
+func getEmptyCage(cages []*Cage) *Cage {
+    for _, cage := range cages {
+        if cage.Animal == nil {
+            return cage
+        }
+    }
+    return nil
 }
 
 func main() {
